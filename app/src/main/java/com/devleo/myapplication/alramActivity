@@ -1,0 +1,71 @@
+package com.example.myapplication;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class alramActivity extends AppCompatActivity {
+
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private MediaPlayer mediaPlayer;
+    private static final int MAX_DELAY_SECONDS = 60; // 1분 제한
+    private static final int SOUND_DELAY_SECONDS = 30; // 소리 n초 뒤 재생
+    private static final int DIALOG_DELAY_AFTER_SOUND = 5; // 소리 울리고 5초 뒤 다이얼로그
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_alram);
+
+        if (SOUND_DELAY_SECONDS < 0 || SOUND_DELAY_SECONDS > MAX_DELAY_SECONDS) {
+            Toast.makeText(this, "n초는 0~60 사이여야 합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        handler.postDelayed(this::playSound, SOUND_DELAY_SECONDS * 1000);
+    }
+
+    private void playSound() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound);
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
+
+        // 5초 뒤 다이얼로그 표시
+        handler.postDelayed(this::showAnnoyingDialog, DIALOG_DELAY_AFTER_SOUND * 1000);
+    }
+
+    private void showAnnoyingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("끄게 해줄까?");
+        builder.setMessage("진심이야?");
+
+        // 응 버튼 추가, 하지만 누르면 아무 일도 안 일어나게!
+        builder.setPositiveButton("응", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 아무것도 안 함 (심리전)
+                Toast.makeText(alramActivity.this, "진짜로 끌 수 있을 거라 생각했어?", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // 다이얼로그 자체는 백버튼, 바깥 터치로 닫히지 않도록 설정
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null); // 핸들러 정리
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+}
