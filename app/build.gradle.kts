@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.devleo.myapplication"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.devleo.myapplication"
@@ -40,4 +40,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    // This dependency is downloaded from the Google's Maven repository.
+    // Make sure you also include that repository in your project's build.gradle file.
+    implementation("com.google.android.play:review:2.0.2")
+
+    // For Kotlin users, also import the Kotlin extensions library for Play In-App Review:
+    implementation("com.google.android.play:review-ktx:2.0.2")
+
 }
