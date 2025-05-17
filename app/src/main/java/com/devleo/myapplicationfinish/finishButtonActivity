@@ -1,0 +1,46 @@
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+
+public class finishButtonActivity extends AppCompatActivity {
+    Button button;
+    int buttonNumber;
+
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_finish_button);
+
+        button = findViewById(R.id.finish_bt);
+        button.setOnClickListener(v -> {
+            ++buttonNumber;
+            button_send(buttonNumber);
+        });
+
+
+
+    }
+
+
+    private void button_send(int buttonNumber) {
+        if (buttonNumber == 1) {
+            Toast.makeText(this, "딱 한 번만 더… 그러면 끝낼게요.", Toast.LENGTH_SHORT).show();
+        } else if (buttonNumber == 2) {
+            Toast.makeText(this, "한 번만 더, 약속할게요. 진짜 끝이에요.", Toast.LENGTH_SHORT).show();
+
+        } else if (buttonNumber == 3) {
+            Toast.makeText(this, "더 이상은 못 버티겠어요… 1번만 더 눌러주세요.", Toast.LENGTH_SHORT).show();
+
+        } else if (buttonNumber == 4) {
+            Toast.makeText(this, "누른다고 진짜 누르냐?ㅋㅋㅋㅋㅋㅋㅋ", Toast.LENGTH_SHORT).show();
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+        }
+    }
+}
